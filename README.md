@@ -1,3 +1,5 @@
+# 汽车零部件缺陷检测及平台开发
+
 ## 项目架构
 
 ![image-20240320231236714](README.assets/image-20240320231236714-17109934096701.png)
@@ -181,3 +183,4 @@ pip install gradio
 fifityone：https://github.com/voxel51/fiftyone
 
 detectron2：https://github.com/facebookresearch/detectron2/tree/main
+
