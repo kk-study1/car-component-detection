@@ -1,26 +1,18 @@
 import fiftyone as fo
-import fiftyone.utils.random as four
+import os
 
-image_dir = r'E:\SC_search_longfaning\car-component-detect\dataset\car_surface\img'
-annotations_path = r'E:\SC_search_longfaning\car-component-detect\dataset\car_surface\anno\val_.json'
-
-dataset_name = 'car_surface'
-if dataset_name in fo.list_datasets():
-    car_parts_dataset = fo.load_dataset(dataset_name)
-else:
-     car_parts_dataset=fo.Dataset.from_dir(
-        name=dataset_name,
-        data_path=image_dir,
-        labels_path=annotations_path,
-        dataset_type=fo.types.COCODetectionDataset
+datasets_dir = "./datasets"
+datasets = {}  # 存储数据
+for dataset_name in os.listdir(datasets_dir):
+    if dataset_name in fo.list_datasets():
+        datasets[dataset_name] = fo.load_dataset(dataset_name)
+    dataset_dir = datasets_dir + '/' + dataset_name
+    print(dataset_dir)
+    datasets[dataset_name] = fo.Dataset.from_dir(
+        dataset_dir=dataset_dir,
+        dataset_type=fo.types.FiftyOneDataset,
+        name=dataset_name
     )
 
-
-# 向sample的tags字段添加内容
-for sample in car_parts_dataset.iter_samples(autosave=True, batch_size=100):
-    for detection in sample.detections.detections:
-        detection['tags'].append(detection['supercategory'])
-
-session = fo.launch_app(car_parts_dataset)
+session = fo.launch_app(datasets["car_parts_dataset"])
 session.wait()
-

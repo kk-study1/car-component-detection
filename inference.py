@@ -55,7 +55,6 @@ def detectron_to_fo(outputs, img_w, img_h):
 
 # 验证操作
 def evaluate(args, predictor):
-
     # 加载自定义CoCo格式的数据集
     dataset_name = 'car_components'
     if dataset_name in fo.list_datasets():
@@ -94,7 +93,7 @@ def evaluate(args, predictor):
     #     new_dataset.add_sample(view)
 
     # 划分数据集
-    four.random_split(car_parts_dataset, {'train': 0.75, 'test': 0.15, 'val': 0.1})
+    four.random_split(car_parts_dataset, {'train': 0.75, 'test': 0.15, 'val': 0.1}, seed=100)
 
     # 拿到val数据集
     val_view = car_parts_dataset.match_tags("val")
@@ -152,13 +151,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Detectron2 Inference and FiftyOne Visualization")
     parser.add_argument('--config', type=str, default='COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml',
                         help='Path to the config file')
-    parser.add_argument('--weights', type=str, default=r'C:\Users\ASUS\Desktop\test\model_0012997.pth',
+    parser.add_argument('--weights', type=str, default=r'./weight/model_0012997.pth',
                         help='Path to the model weights')
-    parser.add_argument('--dataset_name', type=str, default='car_components', help='dataset name to the fiftyone')
+    parser.add_argument('--dataset_name', type=str, default='car_components', help='datasets name to the fiftyone')
     parser.add_argument('--operation', type=str, default='evaluate', help='operation choose evaluate or detect')
     parser.add_argument('--image', type=str, default='', help='Path to the image')
-    parser.add_argument('--images_dir', type=str, default=r'E:\SC_search_longfaning\car-component-detect\dataset\car_parts\coco_format\images', help='Directory to the images')
-    parser.add_argument('--annotations_file', type=str, default=r'E:\SC_search_longfaning\car-component-detect\dataset\car_parts\coco_format\annotations\annotations.json', help='Path to the annotations_file')
+    parser.add_argument('--images_dir', type=str,
+                        default=r'E:\SC_search_longfaning\car-component-detect\dataset\car_parts\coco_format_server\images',
+                        help='Directory to the images')
+    parser.add_argument('--annotations_file', type=str,
+                        default=r'E:\SC_search_longfaning\car-component-detect\dataset\car_parts\coco_format_server\annotations\annotations.json',
+                        help='Path to the annotations_file')
 
     args = parser.parse_args()
     config_file = model_zoo.get_config_file(args.config)
@@ -178,12 +181,17 @@ if __name__ == '__main__':
             car_parts_dataset = detect(args, predictor)
 
     # 评估模型的质量
-    car_parts_dataset.evaluate_detections(pred_field='predictions', gt_field='detections', eval_key="eval")  # pred_field 模型预测结果的字段，gt_field真实标签字段，eval_key评估结果保存的字段
+    car_parts_dataset.evaluate_detections(pred_field='predictions', gt_field='detections',
+                                          eval_key="eval")  # pred_field 模型预测结果的字段，gt_field真实标签字段，eval_key评估结果保存的字段
 
     # 向sample的tags字段添加内容
     for sample in car_parts_dataset.iter_samples(autosave=True, batch_size=100):
         for detection in sample.detections.detections:
             detection['tags'].append(detection['supercategory'])
+
+    # 导出数据
+    export_dir = "datasets/car_parts_dataset"
+    car_parts_dataset.export(export_dir=export_dir, dataset_type=fo.types.FiftyOneDataset)
 
     # 启动程序
     session = fo.launch_app(car_parts_dataset)

@@ -10,7 +10,6 @@ albumentations图片变换的方法：
 https://blog.csdn.net/u014297502/article/details/128472186?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-128472186-blog-124682837.235^v36^pc_relevant_default_base3&spm=1001.2101.3001.4242.1&utm_relevant_index=3
 '''
 
-
 def categoryID_not_1_or_2_imgaes_id_mapping(intput_dir):
     # json路径
     coco_json_dir = os.path.join(intput_dir, 'annotations')

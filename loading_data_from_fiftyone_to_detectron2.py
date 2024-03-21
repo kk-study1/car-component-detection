@@ -73,7 +73,7 @@ def get_data_dicts_from_fiftyone(fiftyone_dataset):
             tlx, tly, w, h = annotation['bounding_box']
             bbox = [int(tlx * width), int(tly * height), int(w * width), int(h * height)]
             bbox_mode = BoxMode.XYWH_ABS
-            category_id = category_mapping[annotation['label']] - 1
+            category_id = category_mapping_zh[annotation['label']] - 1
 
             obj = {
                 'bbox': bbox,

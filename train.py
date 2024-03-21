@@ -34,7 +34,7 @@ from detectron2.utils import comm
 
 # 自定义包
 import loading_data_from_fiftyone_to_detectron2 as loading_data
-from data_augumentation import custom_mapper
+from utils.data_augumentation import custom_mapper
 
 
 class CustomTrainer(DefaultTrainer):
@@ -46,9 +46,9 @@ class CustomTrainer(DefaultTrainer):
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         """
-        Create evaluator(s) for a given dataset.
-        This uses the special metadata "evaluator_type" associated with each builtin dataset.
-        For your own dataset, you can simply create an evaluator manually in your
+        Create evaluator(s) for a given datasets.
+        This uses the special metadata "evaluator_type" associated with each builtin datasets.
+        For your own datasets, you can simply create an evaluator manually in your
         script and do not have to worry about the hacky if-else logic here.
         """
         if output_folder is None:
@@ -86,7 +86,7 @@ class CustomTrainer(DefaultTrainer):
             return LVISEvaluator(dataset_name, cfg, True, output_folder)
         if len(evaluator_list) == 0:
             raise NotImplementedError(
-                "no Evaluator for the dataset {} with the type {}".format(
+                "no Evaluator for the datasets {} with the type {}".format(
                     dataset_name, evaluator_type
                 )
             )
@@ -169,7 +169,7 @@ def setup_hyper_parameter(output_dir, train_imgs_count):
 
     cfg = get_cfg()  # 获得配置信息
     cfg.merge_from_file(model_zoo.get_config_file(
-        "COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml"))  # 合并主干网络  # FPN：Region Proposal Network(区域提议网络)
+            "COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml"))  # 合并主干网络  # FPN：Region Proposal Network(区域提议网络)
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml")  # 预训练模型权重
     '''
     RPN是一种全卷积网络（FCN），它可以在任意大小的图像上滑动，产生一系列的矩形框，这些矩形框就是RoI。
