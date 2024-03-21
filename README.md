@@ -1,0 +1,2 @@
+# detectron2_fiftyone
+将fiftyone集成到detectron2框架，用于评估模型的性能，并开发缺陷检测平台
