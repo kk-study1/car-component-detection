@@ -86,7 +86,7 @@ def convert_to_coco_format(input_dir, output_dir):
         width, height = annotation_data['imageWidth'], annotation_data['imageHeight']  # 882 1288
 
         # 添加图片信息
-        file_name = annotation_data['imagePath'].split('\\')[-1]  # ..\\高晋峰\\2020-03-07_05_37_28_083.jpg -->2020_03_07_05_37_28_083.jpg
+        file_name = annotation_data['imagePath'].split('\\')[-1]  # ..\\×××\\2020-03-07_05_37_28_083.jpg -->2020_03_07_05_37_28_083.jpg
         file_name = str(image_id) + '_' + file_name.replace('-','_')  # 2020-03-07_05_37_28_083.jpg --> 2020_03_07_05_37_28_083.jpg
 
         # try:
